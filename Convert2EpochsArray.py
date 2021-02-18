@@ -24,14 +24,14 @@ ch_names = ["O2","O1","P4","P3","C4","C3","F4","F3","Fp2","Fp1",
 # Sampling frequency
 sfreq = 250
 
-# Info subject contianing sensor and samling frequency info
+# Info subject containing sensor and sampling frequency info
 info = mne.create_info(ch_names,sfreq)
 
 
 # Saving in Epoch Array format
 for subject in range(eeg_data.shape[0]):
     
-    # Experiment have two conditions: Beginning and Ending
+    # Experiment has two conditions: Beginning and Ending
     cond_1 = eeg_data[subject,0,:,:,:]
     cond_2 = eeg_data[subject,1,:,:,:]
     
