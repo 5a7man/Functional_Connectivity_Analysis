@@ -13,7 +13,7 @@ from Classification import Classification
 
 ## Converting Connectivity Matrix into feature table for each subject and 
 ## saving them
-# subjects =  10
+# subjects =  20
 
 # for subject in range(subjects):
 #     # Loading subject's data
@@ -44,7 +44,7 @@ from Classification import Classification
 
 # Forming Feature Table by combining features of all subjects
 feature_table = np.zeros([1,466])
-subjects = 10
+subjects = 20
 for subject in range(subjects):
     filename = 'Connectivity_Subject_'+ str(subject+1) + '.npy'
     data = np.load(filename)
