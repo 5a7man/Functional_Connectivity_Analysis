@@ -11,13 +11,15 @@ Created on Wed Feb 17 15:56:40 2021
 import mne
 import numpy as np
 import scipy.signal as ss
+import matplotlib.pyplot as plt
 
-
-def Connectivity_Matrix(Epoch_Object):
+def Connectivity_Matrix(Epoch_Object,f_min,f_max):
     ## ------------------------------------------------------------------------
     # Connectivity_Matrix computed connectivity (PLI based) between time series
     # Input -->
     #       Epoch_Object: in form (epochs,channels,data_points)
+    #       f_min: lowest frequency of band in hertz
+    #       f_max: maximum frequency of band in hertz
     #
     # Output -->
     #       connectivity_matrix: in form (epochs,channels,channels)
@@ -34,10 +36,16 @@ def Connectivity_Matrix(Epoch_Object):
     # Predefining connectivity matrix
     conectivity_matrix = np.zeros([epochs,channels,channels],dtype=float)
     
+    # Designing Filter
+    sos = ss.butter(N=10,Wn=[f_min,f_max],btype='bandpass',analog=False,output='sos',fs=250)
+    
     
     for epoch in range(epochs):
         # Getting datapoints correspond to respective epoch
         data = Epoch_Object[epoch,:,:]
+        
+        # Filteration
+        data = ss.sosfilt(sos, data)
         
         # Hilbert transform
         data_hilbert = np.imag(ss.hilbert(data))
@@ -53,22 +61,3 @@ def Connectivity_Matrix(Epoch_Object):
     return conectivity_matrix
                 
   
-## Testing 
-# Loading epoch object
-subject_1 = mne.read_epochs('Subject_1-epo.fif', preload=False)
-
-# Finding connectivity matrix (PLI based) 
-conectivity_matrix = Connectivity_Matrix(subject_1)
-
-
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
