@@ -43,14 +43,21 @@ from Classification import Classification
 ## Classification
 
 # Forming Feature Table by combining features of all subjects
-feature_table = np.zeros([1,466])
-subjects = 20
-for subject in range(subjects):
-    filename = 'Connectivity_Subject_'+ str(subject+1) + '.npy'
-    data = np.load(filename)
-    feature_table = np.vstack([feature_table,data])
+# feature_table = np.zeros([1,466])
+# subjects = 1
+# for subject in range(subjects):
+#     filename = 'Connectivity_Subject_'+ str(subject+1) + '.npy'
+#     data = np.load(filename)
+#     feature_table = np.vstack([feature_table,data])
      
-feature_table = feature_table[1:,:]    
+# feature_table = feature_table[1:,:]    
 
+# Accuracy = Classification(feature_table)
+# print('Accuracy is:',Accuracy,'%')
+
+
+### Classification Accuracy Per Subject
+filename = 'Connectivity_Subject_'+ str(1) + '.npy'
+feature_table = np.load(filename)
 Accuracy = Classification(feature_table)
 print('Accuracy is:',Accuracy,'%')
