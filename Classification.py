@@ -3,16 +3,17 @@
 Created on Sat Feb 20 20:18:44 2021
 
 @author: Muhammad Salman Kabir
-@purpose: Within Subject Classification
+@purpose: Classification model for high and low 
 @regarding: Functional Connectivity Analysis
 """
 
 import sklearn as sk
+import sklearn.model_selection
+import sklearn.svm
 
 def Classification(Feature_Table):
     ## ------------------------------------------------------------------------
-    # Classification do the SVM classification of time series data based on PLI 
-    # features
+    # Classification do the SVM classification of time series data
     # Input -->
     #       Feature_Table: feature table in standard form
     #
@@ -25,12 +26,13 @@ def Classification(Feature_Table):
     
     # Extracting response
     classes = Feature_Table[:,-1]
+    print(classes)
     
     # Train Test Data split
     x_train, x_test, y_train, y_test = sk.model_selection.train_test_split(features, classes, test_size=0.3, random_state =123)
     
     # SVM Classifier init.
-    clf = sk.svm.SVC(kernel='poly')
+    clf = sk.svm.SVC(kernel='rbf')
     
     # Fitting
     clf.fit(x_train,y_train)
