@@ -3,19 +3,18 @@
 Created on Wed Feb 17 15:56:40 2021
 
 @author: Muhammad Salman Kabir
-@purpose: Connectivity Matrix (PLI)
+@purpose: Connectivity Matrix 
 @regarding: Functional Connectivity Analysis
 """
 
 # Importing necassary libraries
-import mne
 import numpy as np
 import scipy.signal as ss
-import matplotlib.pyplot as plt
+# from nilearn.connectome import ConnectivityMeasure
 
-def Connectivity_Matrix(Epoch_Object,f_min,f_max):
+def Connectivity_Matrix(Epoch_Object,f_min,f_max,Connectivity):
     ## ------------------------------------------------------------------------
-    # Connectivity_Matrix computed connectivity (PLI based) between time series
+    # Connectivity_Matrix computed connectivity (PLI, PLV, CCF) between time series
     # Input -->
     #       Epoch_Object: in form (epochs,channels,data_points)
     #       f_min: lowest frequency of band in hertz
@@ -54,10 +53,37 @@ def Connectivity_Matrix(Epoch_Object,f_min,f_max):
         phase = np.arctan(data_hilbert/data)
         
         # Connectivity Matrix Computation
-        for i in range(channels):
-            for j in range(channels):
-                conectivity_matrix[epoch,i,j] = np.sum(np.sign(phase[i,:]-phase[j,:]))/data_points
+        if Connectivity == "PLI":
+            for i in range(channels):
+                for k in range(channels):
+                    conectivity_matrix[epoch,i,k] = np.sum(np.sign(phase[i,:]-phase[k,:]))/data_points
+        
+        if Connectivity == "PLV":
+            for i in range(channels):
+                for k in range(channels):
+                    conectivity_matrix[epoch,i,k] = np.sum(np.exp(1j*(phase[i,:]-phase[k,:])))/data_points
+                    
+        if Connectivity == "CCF":
+            for i in range(channels):
+                for k in range(channels):
+                    temp = np.corrcoef(data[i,:],data[k,:])
+                    conectivity_matrix[epoch,i,k] = temp[0][1]
+                    
+        # if Connectivity == "COV":
+        #     data = data.T
+        #     connectivity_measure = ConnectivityMeasure(kind='covariance')
+        #     conectivity_matrix = connectivity_measure.fit_transform(data)
+            
+        # if Connectivity == "PCOR":
+        #     data = data.T
+        #     connectivity_measure = ConnectivityMeasure(kind='partial correlation')
+        #     conectivity_matrix = connectivity_measure.fit_transform(data)
+            
+        # if Connectivity == "TAN":
+        #     data = data.T
+        #     connectivity_measure = ConnectivityMeasure(kind='tangent')
+        #     conectivity_matrix = connectivity_measure.fit_transform(data)
+            
                 
     return conectivity_matrix
                 
-  
