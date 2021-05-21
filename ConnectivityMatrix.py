@@ -10,7 +10,7 @@ Created on Wed Feb 17 15:56:40 2021
 # Importing necassary libraries
 import numpy as np
 import scipy.signal as ss
-# from nilearn.connectome import ConnectivityMeasure
+from nilearn.connectome import ConnectivityMeasure
 
 def Connectivity_Matrix(Epoch_Object,f_min,f_max,Connectivity):
     ## ------------------------------------------------------------------------
@@ -69,16 +69,19 @@ def Connectivity_Matrix(Epoch_Object,f_min,f_max,Connectivity):
                     temp = np.corrcoef(data[i,:],data[k,:])
                     conectivity_matrix[epoch,i,k] = temp[0][1]
                     
-        # if Connectivity == "COV":
-        #     data = data.T
-        #     connectivity_measure = ConnectivityMeasure(kind='covariance')
-        #     conectivity_matrix = connectivity_measure.fit_transform(data)
+        if Connectivity == "COV":
+            data = data.T
+            temp = np.reshape(data,(1,data.shape[0],data.shape[1]))
+            connectivity_measure = ConnectivityMeasure(kind='covariance')
+            conectivity_matrix[epoch,:,:] = connectivity_measure.fit_transform(temp)
             
-        # if Connectivity == "PCOR":
-        #     data = data.T
-        #     connectivity_measure = ConnectivityMeasure(kind='partial correlation')
-        #     conectivity_matrix = connectivity_measure.fit_transform(data)
-            
+        if Connectivity == "PCOR":
+            data = data.T
+            temp = np.reshape(data,(1,data.shape[0],data.shape[1]))
+            connectivity_measure = ConnectivityMeasure(kind='partial correlation')
+            conectivity_matrix[epoch,:,:] = connectivity_measure.fit_transform(temp)
+        
+       
         # if Connectivity == "TAN":
         #     data = data.T
         #     connectivity_measure = ConnectivityMeasure(kind='tangent')
