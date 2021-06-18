@@ -25,6 +25,7 @@ def Connectivity_Matrix(Epoch_Object,f_min,f_max,Connectivity):
     ##-------------------------------------------------------------------------    
     
     # Gettig data from epoch object in array form
+    print(Connectivity)
     Epoch_Object = Epoch_Object.get_data(picks='all')
     
     # No of epochs, channels and datapoints/epoch
@@ -56,12 +57,12 @@ def Connectivity_Matrix(Epoch_Object,f_min,f_max,Connectivity):
         if Connectivity == "PLI":
             for i in range(channels):
                 for k in range(channels):
-                    conectivity_matrix[epoch,i,k] = np.sum(np.sign(phase[i,:]-phase[k,:]))/data_points
-        
+                    conectivity_matrix[epoch,i,k] = np.abs(np.sum(np.sign(phase[i,:]-phase[k,:])))/data_points
+                    
         if Connectivity == "PLV":
             for i in range(channels):
                 for k in range(channels):
-                    conectivity_matrix[epoch,i,k] = np.sum(np.exp(1j*(phase[i,:]-phase[k,:])))/data_points
+                    conectivity_matrix[epoch,i,k] = np.abs(np.sum(np.exp(1j*(phase[i,:]-phase[k,:]))))/data_points
                     
         if Connectivity == "CCF":
             for i in range(channels):
@@ -70,10 +71,11 @@ def Connectivity_Matrix(Epoch_Object,f_min,f_max,Connectivity):
                     conectivity_matrix[epoch,i,k] = temp[0][1]
                     
         if Connectivity == "COV":
-            data = data.T
-            temp = np.reshape(data,(1,data.shape[0],data.shape[1]))
-            connectivity_measure = ConnectivityMeasure(kind='covariance')
-            conectivity_matrix[epoch,:,:] = connectivity_measure.fit_transform(temp)
+            for i in range(channels):
+                for k in range(channels):
+                    f, Cxy = ss.coherence(data[i,:],data[k,:],fs= 250)
+                    conectivity_matrix[epoch,i,k] =np.mean(Cxy)
+                    
             
         if Connectivity == "PCOR":
             data = data.T
