@@ -21,6 +21,7 @@ def CV_Classification(Feature_Table,K,PCA_Flag,PCA_no):
     # Input -->
     #       Feature_Table: feature table in standard form
     #
+    # Output -->
     #       Accuracy
     ##-------------------------------------------------------------------------
     
